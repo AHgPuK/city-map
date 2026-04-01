@@ -28,6 +28,9 @@ const DB = function (schema, cityDataBuffer) {
 			}
 
 			const offset = cityData[id] * recordSize;
+			if (isNaN(offset)) {
+				return undefined;
+			}
 			const data = Lib.createObjectFromBuffer(schema, cityDataBuffer.slice(offset, offset + recordSize));
 			data.id = id;
 			return data;
@@ -68,6 +71,26 @@ const DB = function (schema, cityDataBuffer) {
 			{
 				cityDataIndex++;
 			}
+		},
+
+		deleteById: (id) => {
+			if (cityData[id] === undefined) return false;
+
+			// Remove from cityData store
+			const cityInfo = instance.getById(id);
+			const normalizedName = cityInfo?.name?.toLowerCase();
+			const altNamesStr = (normalizedName ?? '');
+			const ids = alterNames[altNamesStr].split(',').filter(i => i !== String(id));
+			if (ids.length > 0) {
+				alterNames[normalizedName] = ids.join(',');
+			}
+			else {
+				delete alterNames[name];
+			}
+
+			delete cityData[id];
+
+			return true;
 		},
 
 		wait: function () {

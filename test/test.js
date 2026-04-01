@@ -17,14 +17,25 @@ Promise.resolve()
 		'Dudinka',
 		'Оффенбах',
 		'Кирьят Ата',
+		'макеевка',
 	]
 
-	citiesToTest.map(function (city) {
+	const tested = citiesToTest.map(function (city) {
 		console.time(DB_LOOKUP);
 		const res = citiesDB.lookup(city);
 		console.timeEnd(DB_LOOKUP);
 		console.log(`City: ${city}`, res);
-	})
+		return res;
+	});
 
+	// Delete test
+	{
+		const cityId = tested[tested.length - 1][0].id;
+		const city = citiesDB.deleteById(cityId);
+		const res = citiesDB.getById(cityId);
+		console.log(`CityId: ${cityId}: ${res}`);
+		const res2 = citiesDB.lookup('макеевка');
+		console.log(`${JSON.stringify(res2)}`);
+	}
 
 })
