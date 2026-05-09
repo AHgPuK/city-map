@@ -85,7 +85,7 @@ const DB = function (schema, cityDataBuffer) {
 				alterNames[normalizedName] = ids.join(',');
 			}
 			else {
-				delete alterNames[name];
+				delete alterNames[normalizedName];
 			}
 
 			delete cityData[id];
